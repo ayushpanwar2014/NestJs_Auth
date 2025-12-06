@@ -18,9 +18,9 @@ export class AuthController {
     async login(
         @Body() dto: LoginDto,
         @Res({ passthrough: true }) res: Response,
+        @Req() req: any
     ) {
-        // Service will handle: validate user, create session, set cookies
-        return this.authService.login(dto, res);
+        return this.authService.login(dto, res, req);
     }
 
     @Post('logout')
