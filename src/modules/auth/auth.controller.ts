@@ -28,7 +28,7 @@ export class AuthController {
         return this.authService.logout(req, res);
     }
 
-    @Get('me')
+    @Get('get-user')
     async getMe(@Req() req: AuthenticatedRequest) {
         return this.authService.getMe(req);
     }
