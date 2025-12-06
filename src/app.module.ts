@@ -5,6 +5,8 @@ import configuration from './config/configuration';
 import { AuthModule } from './modules/auth/auth.module';
 import { SecurityMiddleware } from './common/middleware/security.middleware';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
+import { UserController } from './modules/user/user.controller';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -14,7 +16,9 @@ import { AuthMiddleware } from './common/middleware/auth.middleware';
     }),
     MongooseModule.forRoot(process.env.MONGO_URI!),
     AuthModule,
+    UserModule,
   ],
+  controllers: [UserController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
