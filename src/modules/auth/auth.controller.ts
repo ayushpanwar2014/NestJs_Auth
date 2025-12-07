@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import type { AuthenticatedRequest } from 'src/common/middleware/auth.middleware';
 import type { Response } from 'express';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -24,12 +24,14 @@ export class AuthController {
     }
 
     @Post('logout')
-    async logout(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
+    async logout(@Req() req: any, @Res({ passthrough: true }) res: Response) {
         return this.authService.logout(req, res);
     }
 
+    // PROTECTED
+    @UseGuards(AuthGuard)
     @Get('get-user')
-    async getMe(@Req() req: AuthenticatedRequest) {
+    getMe(@Req() req: any) {
         return this.authService.getMe(req);
     }
 }

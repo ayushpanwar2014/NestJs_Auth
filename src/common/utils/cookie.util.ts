@@ -5,8 +5,8 @@ export class CookieUtil {
             value: token,
             options: {
                 httpOnly: true,
-                secure: true,               // false if localhost on http
-                sameSite: 'strict' as const,
+                secure: false,               // false if localhost on http
+                sameSite: 'lax' as const,
                 path: '/',
                 maxAge: 15 * 60 * 1000,     // 15 min
             },
@@ -19,8 +19,8 @@ export class CookieUtil {
             value: token,
             options: {
                 httpOnly: true,
-                secure: true,
-                sameSite: 'strict' as const,  // FIXED
+                secure: false,
+                sameSite: 'lax' as const,  // FIXED
                 path: '/',
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             },
@@ -29,8 +29,8 @@ export class CookieUtil {
 
     static clearAuthCookies() {
         return [
-            { name: 'access_token', options: { path: '/', sameSite: 'strict' as const } },
-            { name: 'refresh_token', options: { path: '/', sameSite: 'strict' as const } },
+            { name: 'access_token', options: { path: '/', sameSite: 'lax' as const } },
+            { name: 'refresh_token', options: { path: '/', sameSite: 'lax' as const } },
         ];
     }
 }

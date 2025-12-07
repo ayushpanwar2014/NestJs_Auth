@@ -3,7 +3,6 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Response } from 'express';
-import { AuthenticatedRequest } from '../../common/middleware/auth.middleware';
 import { User, UserDocument } from 'src/database/schema/user.schema';
 import { Session, SessionDocument } from 'src/database/schema/session.schema';
 import { RegisterDto } from './dto/register.dto';
@@ -39,7 +38,7 @@ export class AuthService {
     }
 
     async login(dto: LoginDto, res: Response, req: any) {
-        
+
         const user = await this.userModel.findOne({ email: dto.email });
         if (!user) throw new NotFoundException('Invalid credentials');
 
@@ -76,7 +75,7 @@ export class AuthService {
         };
     }
 
-    async logout(req: AuthenticatedRequest, res: Response) {
+    async logout(req: any, res: Response) {
         // TODO:
         // 1) delete session from DB (if you store sessionId / refresh token mapping)
         // 2) clear cookies
@@ -85,8 +84,15 @@ export class AuthService {
         return { success: true };
     }
 
-    async getMe(req: AuthenticatedRequest) {
-        // TODO: return user based on req.user or tokens
-        return { user: req.user || null };
+    async getMe(req: any) {
+        const { userId } = req.user;
+        
+        if (!userId) throw new UnauthorizedException('Invalid refresh token');
+
+        const userExisted = await this.userModel.findById(userId).select('-password').exec();
+
+        if (!userExisted) throw new NotFoundException('Invalid credentials');
+
+        return { user: userExisted || null };
     }
 }
