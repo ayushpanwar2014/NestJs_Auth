@@ -76,17 +76,16 @@ export class AuthService {
     }
 
     async logout(req: any, res: Response) {
-        // TODO:
-        // 1) delete session from DB (if you store sessionId / refresh token mapping)
-        // 2) clear cookies
+        const { sessionID } = req.user;
+        await this.sessionModel.findByIdAndDelete(sessionID);
         res.clearCookie('access_token');
         res.clearCookie('refresh_token');
-        return { success: true };
+        return { success: true, message: 'Logged Out' };
     }
 
     async getMe(req: any) {
         const { userId } = req.user;
-        
+
         if (!userId) throw new UnauthorizedException('Invalid refresh token');
 
         const userExisted = await this.userModel.findById(userId).select('-password').exec();

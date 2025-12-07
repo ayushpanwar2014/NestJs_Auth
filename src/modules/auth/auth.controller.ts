@@ -23,6 +23,8 @@ export class AuthController {
         return this.authService.login(dto, res, req);
     }
 
+    // PROTECTED
+    @UseGuards(AuthGuard)
     @Post('logout')
     async logout(@Req() req: any, @Res({ passthrough: true }) res: Response) {
         return this.authService.logout(req, res);
